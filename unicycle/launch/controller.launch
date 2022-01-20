@@ -1,0 +1,12 @@
+<launch>
+
+  <rosparam file="$(find unicycle)/config/unicycle_control.yaml" command="load"/>
+
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+    output="screen" ns="/unicycle" args="--namespace=/unicycle 
+                                         joint_state_controller
+                                         wheel_controller
+                                         disc_controller  
+                                         --timeout 60"/>              
+
+</launch>

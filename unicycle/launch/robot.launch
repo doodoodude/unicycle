@@ -1,0 +1,32 @@
+<launch>
+
+<!-- LAUNCHING WORLD -->
+  <include file="$(find unicycle)/launch/world.launch"/> 
+
+<!-- CONTROLLING NODE LAUNCHING -->
+  <node pkg="unicycle" type="unicycle_controller" name="stabilisation_node"/> 
+
+<!-- SPAWNING ROBOT -->
+  <arg name="x" default="0"/>                   
+  <arg name="y" default="0"/>
+  <arg name="z" default="0.85895"/> <!-- 0.21895    8605 -->
+
+  <param name="robot_description" textfile="$(find unicycle)/urdf/unicycle.urdf"/>
+
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+    args="-urdf -param robot_description -x $(arg x) -y $(arg y) -z $(arg z) -model unicycle"/>    
+
+<!-- CONTROLLER LAUNCHING -->
+ <!-- <include file="$(find unicycle)/launch/controller.launch"/> -->
+
+  <rosparam file="$(find unicycle)/config/unicycle_control.yaml" command="load"/>
+
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+    output="screen" ns="/unicycle" args="--namespace=/unicycle 
+                                         joint_state_controller
+                                         wheel_controller
+                                         disc_controller  
+                                         --timeout 60"/>        
+
+
+</launch>

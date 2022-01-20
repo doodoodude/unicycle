@@ -1,0 +1,31 @@
+<launch>
+
+<!-- CONTROLLING NODE LAUNCHING -->
+  <node pkg="unicycle" type="stand_controller" name="stand_node"/> 
+
+<!-- SPAWNING ROBOT -->
+
+  <arg name="x" default="0"/>                   
+  <arg name="y" default="0"/>
+  <arg name="z" default="0"/>
+
+  <param name="robot_description" textfile="$(find unicycle)/urdf/stand.urdf"/>
+
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+    args="-urdf -param robot_description -x $(arg x) -y $(arg y) -z $(arg z) -model stand"/>    
+
+<!-- CONTROLLER LAUNCHING -->
+
+  <rosparam file="$(find unicycle)/config/stand_control.yaml" command="load"/>
+
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+    output="screen" ns="/stand" args="--namespace=/stand 
+                                        joint_state_controller
+                                        stand_x_controller
+                                        stand_y_controller
+                                        post_r_controller
+                                        post_p_controller  
+                                        --timeout 60"/>              
+
+
+</launch>

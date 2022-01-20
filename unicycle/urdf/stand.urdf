@@ -1,0 +1,226 @@
+<?xml version="1.0"?>
+<robot name="stand">
+
+<!-- LINKS -->
+
+  <link name="plate">
+    <inertial>
+      <mass value="5"/>
+      <origin rpy="0  0  0" xyz="0  0  0.18"/>
+      <inertia ixx="0.313" ixy="0" ixz="0" iyy="0.313" iyz="0" izz="0.625"/>                     
+    </inertial>
+    <visual>
+      <origin rpy="0  0  0" xyz="0 0 0.12"/>
+      <geometry>
+        <cylinder length="0.04" radius="0.5"/> 
+      </geometry>
+    </visual>
+    <visual>
+      <origin rpy="0  0  0" xyz="0 0 0.05"/>
+      <geometry>
+        <cylinder length="0.1" radius="0.1"/> 
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0  0  0" xyz="0 0 0.12"/>
+      <geometry>
+        <cylinder length="0.04" radius="0.5"/> 
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="ball">
+    <inertial>
+      <mass value="1"/>
+      <origin rpy="0  0  0" xyz="0  0  0"/>
+      <inertia ixx="0.004" ixy="0" ixz="0" iyy="0.004" iyz="0" izz="0.004"/>                     
+    </inertial>
+    <visual>
+      <origin rpy="0  0  0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.1"/> 
+      </geometry>
+    </visual>
+  </link>
+
+  <link name="post">
+    <inertial>
+      <mass value="1"/>
+      <origin rpy="0  0  0" xyz="0  0  0"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>                     
+    </inertial>
+    <visual>
+      <origin rpy="0  0  0" xyz="0 0 0.1"/>
+      <geometry>
+        <cylinder length="0.2" radius="0.1"/> 
+      </geometry>
+    </visual>
+  </link>
+
+  <link name="bridge">
+    <inertial>
+      <mass value="1"/>
+      <origin rpy="0  0  0" xyz="0  0  0"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>                     
+    </inertial>
+    <visual>
+      <origin rpy="0  0  0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.2 1.002 0.1"/> 
+      </geometry>
+    </visual>
+  </link>
+
+  <link name="base">
+    <inertial>
+      <mass value="10"/>
+      <origin rpy="0  0  0" xyz="0  0  0.025"/>
+      <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>                     
+    </inertial>
+    <visual>
+      <origin rpy="0  0  0" xyz="1.4 0 0.025"/>
+      <geometry>
+        <box size="3 1 0.05"/> 
+      </geometry>
+    </visual>
+    <visual>
+      <origin rpy="0  0  0" xyz="1.4 0.45 0.1"/>
+      <geometry>
+        <box size="3 0.1 0.1"/> 
+      </geometry>
+    </visual>
+    <visual>
+      <origin rpy="0  0  0" xyz="1.4 -0.45 0.1"/>
+      <geometry>
+        <box size="3 0.1 0.1"/> 
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0  0  0" xyz="1.4 0 0.025"/>
+      <geometry>
+        <box size="3 1 0.05"/> 
+      </geometry>
+    </collision>
+  </link>
+
+  <gazebo reference="plate">
+    <kp>1000000.0</kp>
+    <kd>1.0</kd>
+    <mu1>0.9</mu1>
+    <mu2>0.9</mu2>
+    <dampingFactor>0</dampingFactor>
+    <fdir1>0 0 0</fdir1>
+    <maxVel>50</maxVel>
+    <minDepth>0.001</minDepth>
+    <maxContacts>5</maxContacts>
+    <material>PR2/Grey2</material> 
+  </gazebo> 
+
+  <gazebo reference="ball">
+    <material>Gazebo/DarkGrey</material> 
+  </gazebo> 
+
+  <gazebo reference="base">
+    <material>Gazebo/White</material> 
+  </gazebo> 
+
+  <gazebo reference="bridge">
+    <material>Gazebo/Grey</material> 
+  </gazebo> 
+
+  <gazebo reference="post">
+    <material>Gazebo/White</material> 
+  </gazebo> 
+
+<!-- JOINTS -->
+  <joint name="stand_x" type="prismatic">
+    <parent link="base"/>
+    <child link="bridge"/>
+    <origin rpy="0      0      0" xyz="0   0  0.15"/>
+    <axis xyz="1  0  0"/>
+    <limit effort="1000.0" lower="0" upper="2.8" velocity="10.0"/>
+  </joint>
+
+  <joint name="stand_y" type="prismatic">
+    <parent link="bridge"/>
+    <child link="post"/>
+    <origin rpy="0      0      0" xyz="0   0  0.05"/>
+    <axis xyz="0  1  0"/>
+    <limit effort="1000.0" lower="-0.5" upper="0.5" velocity="10.0"/>
+  </joint>
+
+  <joint name="post_p" type="revolute">
+    <parent link="post"/>
+    <child link="ball"/>
+    <origin rpy="0      0      0" xyz="0   0  0.3"/>
+    <axis xyz="0  1  0"/>
+    <limit effort="1000.0" lower="-0.7" upper="0.7" velocity="10.0"/>   <!-- 1.79769e+308 -->
+  </joint>
+
+  <joint name="post_r" type="revolute">
+    <parent link="ball"/>
+    <child link="plate"/>
+    <origin rpy="0      0      0" xyz="0   0  0"/>
+    <axis xyz="1  0  0"/>
+    <limit effort="1000.0" lower="-0.7" upper="0.7" velocity="10.0"/>
+  </joint>
+
+  <link name="world"/>
+  <joint name="world_joint" type="fixed">
+    <parent link="world"/>
+    <child link="base"/>
+    <origin rpy="0  0  0" xyz="0  0  0"/>
+  </joint> 
+
+<!-- TRANSMISSIONS -->
+  <transmission name="stand_x_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="stand_x_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="stand_x">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <transmission name="stand_y_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="stand_y_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="stand_y">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <transmission name="post_r_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="post_r_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="post_r">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <transmission name="post_p_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="post_p_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="post_p">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+<!-- GAZEBO PLUGINS-->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/stand</robotNamespace>
+      <legacyModeNS>true</legacyModeNS>
+      <!-- robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType -->
+      <!-- robotParam>/balancer/robot_description</robotParam -->
+    </plugin>
+  </gazebo>
+
+</robot>

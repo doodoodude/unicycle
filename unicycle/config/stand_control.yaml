@@ -1,0 +1,26 @@
+stand:  
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 200
+
+  stand_x_controller:
+    type: effort_controllers/JointPositionController
+    joint: stand_x
+    pid: {p: 350, i: 40, d: 100, i_clamp_max: 500, i_clamp_min: -500}
+
+  stand_y_controller:
+    type: effort_controllers/JointPositionController
+    joint: stand_y
+    pid: {p: 350, i: 40, d: 100, i_clamp_max: 500, i_clamp_min: -500}
+
+  post_r_controller:
+    type: effort_controllers/JointPositionController 
+    joint: post_r
+    pid: {p: 500, i: 20, d: 40, i_clamp_max: 500, i_clamp_min: -500}
+
+  post_p_controller:
+    type: effort_controllers/JointPositionController  
+    joint: post_p
+    pid: {p: 500, i: 20, d: 40, i_clamp_max: 500, i_clamp_min: -500}
+
+
